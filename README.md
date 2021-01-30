@@ -1,4 +1,4 @@
-# 4A2I - PolyDiscovery<img align="right" width="200" height="100" src="https://github.com/Le099/PolyDiscovery/blob/main/logo.png" alt="Logo Polytech">
+# 4A2I - Projet - PolyDiscovery<img align="right" width="200" height="100" src="https://github.com/Le099/PolyDiscovery/blob/main/logo.png" alt="Logo Polytech">
 ---
 ### PolyDiscovery
 
