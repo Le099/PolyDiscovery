@@ -1,15 +1,15 @@
 // Motor init
-int enA = 10; // Right motor speed handler pin
-int in1 = 9; // First rotation handler pin
-int in2 = 8; // Second rotation handler pin
-int enB = 13; // Left motor
-int in3 = 12; // First rotation handler pin
-int in4 = 11; // Second rotation handler pin
+#define enA 10 // Right motor speed handler pin
+#define in1 9 // First rotation handler pin
+#define in2 8 // Second rotation handler pin
+#define enB 13 // Left motor
+#define in3 12 // First rotation handler pin
+#define in4 11 // Second rotation handler pin
 const int vitesse = 100;
 
-const int sw = 18; // Button on joystick
-const int VRx = 0; // X
-const int VRy = 1; // Y
+#define sw 18 // Button on joystick
+#define VRx 0 // X
+#define VRy 1 // Y
 bool automaticMode = false; // Interrupt when sw press
 
 void setup() 
