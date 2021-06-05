@@ -13,9 +13,7 @@ The main goal is to create a driving prototype capable of avoiding obstacles or 
 * Obstacle avoidance program
 
 ###### TBA (optionnal):
-* Inverted pendulum
 * Cartography of a defined space
-* Line tracking
 
 ###### Working:
 * *None yet*
