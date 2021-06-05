@@ -1,3 +1,10 @@
+#include <HCSR04.h>
+
+// HCSR04 init
+#define trigPin 2
+#define echoPin 3
+UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
+
 // Motor init
 #define enA 10 // Right motor speed handler pin
 #define in1 9 // First rotation handler pin
@@ -5,12 +12,21 @@
 #define enB 13 // Left motor
 #define in3 12 // First rotation handler pin
 #define in4 11 // Second rotation handler pin
-const int vitesse = 100;
+int vitesse = 100;
 
+// Joystick init
 #define sw 18 // Button on joystick
 #define VRx 0 // X
 #define VRy 1 // Y
-bool automaticMode = false; // Interrupt when sw press
+bool automaticMode = true; // Interrupt when sw press
+
+// IR sensors init
+#define IR_F 25 // front
+#define IR_F_L 23 // front left
+#define IR_F_R 27 // front right
+#define IR_B_L 31 // back left
+#define IR_B_R 29 // back right
+int detection = HIGH; // no obstacle
 
 void setup() 
 {
@@ -21,53 +37,83 @@ void setup()
   pinMode(enB, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
+  
   // Joystick setup
   pinMode(sw, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(sw), button_ISR, RISING); // Interrupt attach
+  attachInterrupt(5, button_ISR, RISING); // Interrupt attach
+
+  // IR sensors setup
+  pinMode(IR_F, INPUT);
+  pinMode(IR_F_L, INPUT);
+  pinMode(IR_F_R, INPUT);
+  pinMode(IR_B_L, INPUT);
+  pinMode(IR_B_R, INPUT);
+  
   Serial.begin(9600);
 }
 
 void loop() 
 {
   while(automaticMode == false){
-      Serial.println("Automatic mode disabled");
-      //code for automatic mode here
-      int joy_x = analogRead(VRx);
-      int joy_y = analogRead(VRy);
+    //code for automatic mode here
+    int joy_x = analogRead(VRx);
+    int joy_y = analogRead(VRy);
 
-      if((joy_x >= 460 && joy_x <= 540) && (joy_y >= 460 && joy_y <= 540)){ // stop
-        leftMotor(0,true);
-        rightMotor(0,true);
-      }
-      else if(joy_y > 1000 && (joy_x >= 460 && joy_x <= 540)) { // right
-        leftMotor(255,true);
-        rightMotor(255,false);
-      }
-      else if(joy_y < 20 && (joy_x >= 460 && joy_x <= 540)) { // left
-        leftMotor(255,false);
-        rightMotor(255,true);
-      }
-      else if(joy_x > 520 && (joy_y >= 460 && joy_y <= 540)){ // forward
-        int vitesse = map(joy_x,520,1023,0,255);
+    if((joy_x >= 460 && joy_x <= 540) && (joy_y >= 460 && joy_y <= 540)){ // stop
+      leftMotor(0,true);
+      rightMotor(0,true);
+    }
+    else if(joy_y > 1000 && (joy_x >= 460 && joy_x <= 540)) { // right
+      leftMotor(100,true);
+      rightMotor(100,false);
+    }
+    else if(joy_y < 20 && (joy_x >= 460 && joy_x <= 540)) { // left
+      leftMotor(100,false);
+      rightMotor(100,true);
+    }
+    else if(joy_x > 520 && (joy_y >= 460 && joy_y <= 540)){ // forward
+      int vitesse = map(joy_x,520,1023,0,255);
+      if(!((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW))){ // if no obstacle is in sight in front
         leftMotor(vitesse,true);
         rightMotor(vitesse,true);
       }
-      else if(joy_x < 480 && (joy_y >= 460 && joy_y <= 540)){ // backward
-        int vitesse = map(joy_x,480,0,0,255);
+      else{ // if obstacle is in sight
+        leftMotor(0,true);
+        rightMotor(0,true);
+      }
+    }
+    else if(joy_x < 480 && (joy_y >= 460 && joy_y <= 540)){ // backward
+      int vitesse = map(joy_x,480,0,0,255);
+      if(!((digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW))){ // if no obstacle is in sight in the back
         leftMotor(vitesse,false);
         rightMotor(vitesse,false);
       }
+      else{ // if obstacle is in sight
+        leftMotor(0,true);
+        rightMotor(0,true);
+      }
+    }
   }
   while(automaticMode == true){
-      Serial.println("Automatic mode enabled");
-      //code for manual mode here
-      delay(250);
+    int frontDistance = distanceSensor.measureDistanceCm();
+    Serial.print("Distance front: ");
+    Serial.println(frontDistance);
+    if((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW) || (digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW)){
+      leftMotor(0,true);
+      rightMotor(0,true);
+    }
+    else{ 
+      Serial.println("No obstacle!");
+      leftMotor(100,true);
+      rightMotor(100,true);
+    }
   }
 }
 
 void button_ISR()
 {
   automaticMode = !automaticMode;
+  Serial.println("Changing mode...");
 }
 
 /**
@@ -75,7 +121,7 @@ void button_ISR()
  * @param ratio Le pourcentage de puissance a laquelle le moteur doit fonctionner
  * @param sens True: avance, False: recule
  */
-void leftMotor(int vitesse,bool sens){
+void rightMotor(int vitesse,bool sens){
   if(sens){
     digitalWrite(in3,HIGH);      
     digitalWrite(in4,LOW);
@@ -93,7 +139,7 @@ void leftMotor(int vitesse,bool sens){
  * @param ratio Le pourcentage de puissance a laquelle le moteur doit fonctionner
  * @param sens True: avance, False: recule
  */
-void rightMotor(int vitesse, bool sens) {
+void leftMotor(int vitesse, bool sens) {
   if(sens){
     digitalWrite(in1,HIGH);      
     digitalWrite(in2,LOW);
