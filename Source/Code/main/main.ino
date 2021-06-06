@@ -102,25 +102,38 @@ void loop()
     Serial.print("Distance front: ");
     Serial.println(frontDistance);
     if(frontDistance > 200){
-      speed = 255;
+      speed = 150;
     }else if(frontDistance <= 200 && frontDistance >= 100){
       speed = 100;
-    }else if(frontDistance < 100 && frontDistance >= 50){
-      speed = 50;
+    }else if(frontDistance < 100 && frontDistance >= 20){
+      speed = 75;
     }else{
       stopDelay(100);
       rightRotation(1000);
       stopDelay(100);
     }
-    Serial.println(frontDistance);
-    if((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW) || (digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW)){
-      leftMotor(0,true);
-      rightMotor(0,true);
+    if(((digitalRead(IR_F) == LOW) &&((digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW))) && !((digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW))){
+      Serial.println("Small back");
+      delay(100);
+      leftMotor(100,false);
+      rightMotor(100,false);
+      delay(1000);
     }
-    else{ 
-      Serial.println("No obstacle!");
-      leftMotor(100,true);
-      rightMotor(100,true);
+    else if((digitalRead(IR_F_L) == LOW) && (digitalRead(IR_F) == HIGH)){
+      Serial.println("Small right");
+      stopDelay(100);
+      rightRotation(100);
+      stopDelay(100);
+    }
+    else if((digitalRead(IR_F_R) == LOW) && (digitalRead(IR_F) == HIGH)){
+      Serial.print("Small left");
+      stopDelay(100);
+      leftRotation(100);
+      stopDelay(100);
+    }
+    else{
+      leftMotor(speed,true);
+      rightMotor(speed,true);
     }
   }
 }
@@ -166,8 +179,8 @@ void leftMotor(int vitesse, bool sens) {
  * @param delay Le delai de rotation (en ms)
  */
 void leftRotation(int del){
-  leftMotor(100, false);
-  rightMotor(100, true);
+  leftMotor(75, true);
+  rightMotor(75, false);
   delay(del);
 }
 
@@ -176,8 +189,8 @@ void leftRotation(int del){
  * @param delay Le delai de rotation (en ms)
  */
 void rightRotation(int del){
-  leftMotor(100, true);
-  rightMotor(100, false);
+  leftMotor(75, false);
+  rightMotor(75, true);
   delay(del);
 }
 
