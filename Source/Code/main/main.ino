@@ -28,6 +28,8 @@ bool automaticMode = false; // Interrupt when sw press
 #define IR_B_R 29 // back right
 int detection = HIGH; // no obstacle
 
+int speed = 0;
+
 void setup() 
 {
   // Motor setup
@@ -96,6 +98,15 @@ void loop()
   while(automaticMode == true){
     int frontDistance = distanceSensor.measureDistanceCm();
     Serial.print("Distance front: ");
+    if(frontDistance > 200){
+      speed = 255;
+    }else if(frontDistance <= 200 && frontDistance >= 100){
+      speed = 100
+    }else if(frontDistance < 100 && frontDistance >= 50){
+      speed = 50;
+    }else{
+      rightRotation(1000);
+    }
     Serial.println(frontDistance);
     if((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW) || (digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW)){
       leftMotor(0,true);
@@ -149,4 +160,24 @@ void leftMotor(int vitesse, bool sens) {
     digitalWrite(in2,HIGH);
     analogWrite(enA,vitesse);
   }
+}
+
+/**
+ * Fonction permettant d'effectuer une rotation sur la gauche pendant un temps donné
+ * @param delay Le delai de rotation (en ms)
+ */
+void leftRotation(int delay){
+  leftMotor(100, false);
+  rightMotor(100, true);
+  delay(delay);
+}
+
+/**
+ * Fonction permettant d'effectuer une rotation sur la droite pendant un temps donné
+ * @param delay Le delai de rotation (en ms)
+ */
+void leftRotation(int delay){
+  leftMotor(100, true);
+  rightMotor(100, false);
+  delay(delay);
 }
