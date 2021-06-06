@@ -15,10 +15,9 @@ UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 int vitesse = 100;
 
 // Joystick init
-#define sw 18 // Switch two positions
+#define sw 6 // Switch two positions
 #define VRx 0 // X
 #define VRy 1 // Y
-bool automaticMode = false; // Interrupt when sw press
 
 // IR sensors init
 #define IR_F 25 // front
@@ -40,7 +39,7 @@ void setup()
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
   
-  // Joystick setup
+  //Mode setup
   pinMode(sw, INPUT);
   // IR sensors setup
   pinMode(IR_F, INPUT);
@@ -55,7 +54,7 @@ void setup()
 void loop() 
 {
   while(digitalRead(sw) == HIGH){
-    //code for automatic mode here
+
     int joy_x = analogRead(VRx);
     int joy_y = analogRead(VRy);
 
@@ -96,6 +95,7 @@ void loop()
   while(digitalRead(sw) == LOW){
     int frontDistance = distanceSensor.measureDistanceCm();
     Serial.print("Distance front: ");
+    Serial.println(frontDistance);
     if(frontDistance > 200){
       speed = 255;
     }else if(frontDistance <= 200 && frontDistance >= 100){
