@@ -103,7 +103,9 @@ void loop()
     }else if(frontDistance < 100 && frontDistance >= 50){
       speed = 50;
     }else{
+      stopDelay(20);
       rightRotation(1000);
+      stopDelay(20);
     }
     Serial.println(frontDistance);
     if((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW) || (digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW)){
@@ -171,5 +173,15 @@ void leftRotation(int del){
 void rightRotation(int del){
   leftMotor(100, true);
   rightMotor(100, false);
+  delay(del);
+}
+
+/**
+ * Fonction permettant d'effectuer une rotation sur la droite pendant un temps donné
+ * @param delay Le delai de rotation (en ms)
+ */
+void stopDelay(int del){
+  leftMotor(0, true);
+  rightMotor(0, true);
   delay(del);
 }
