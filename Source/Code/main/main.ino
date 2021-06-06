@@ -18,7 +18,7 @@ int vitesse = 100;
 #define sw 18 // Button on joystick
 #define VRx 0 // X
 #define VRy 1 // Y
-bool automaticMode = true; // Interrupt when sw press
+bool automaticMode = false; // Interrupt when sw press
 
 // IR sensors init
 #define IR_F 25 // front
@@ -63,13 +63,13 @@ void loop()
       leftMotor(0,true);
       rightMotor(0,true);
     }
-    else if(joy_y > 1000 && (joy_x >= 460 && joy_x <= 540)) { // right
-      leftMotor(100,true);
-      rightMotor(100,false);
-    }
-    else if(joy_y < 20 && (joy_x >= 460 && joy_x <= 540)) { // left
+    else if(joy_y > 1000 && (joy_x >= 460 && joy_x <= 540)) { // left
       leftMotor(100,false);
       rightMotor(100,true);
+    }
+    else if(joy_y < 20 && (joy_x >= 460 && joy_x <= 540)) { // right
+      leftMotor(100,true);
+      rightMotor(100,false);
     }
     else if(joy_x > 520 && (joy_y >= 460 && joy_y <= 540)){ // forward
       int vitesse = map(joy_x,520,1023,0,255);
@@ -83,10 +83,9 @@ void loop()
       }
     }
     else if(joy_x < 480 && (joy_y >= 460 && joy_y <= 540)){ // backward
-      int vitesse = map(joy_x,480,0,0,255);
       if(!((digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW))){ // if no obstacle is in sight in the back
-        leftMotor(vitesse,false);
-        rightMotor(vitesse,false);
+        leftMotor(100,false);
+        rightMotor(100,false);
       }
       else{ // if obstacle is in sight
         leftMotor(0,true);
