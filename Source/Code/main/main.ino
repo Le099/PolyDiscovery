@@ -101,7 +101,7 @@ void loop()
     if(frontDistance > 200){
       speed = 255;
     }else if(frontDistance <= 200 && frontDistance >= 100){
-      speed = 100
+      speed = 100;
     }else if(frontDistance < 100 && frontDistance >= 50){
       speed = 50;
     }else{
@@ -166,18 +166,18 @@ void leftMotor(int vitesse, bool sens) {
  * Fonction permettant d'effectuer une rotation sur la gauche pendant un temps donné
  * @param delay Le delai de rotation (en ms)
  */
-void leftRotation(int delay){
+void leftRotation(int del){
   leftMotor(100, false);
   rightMotor(100, true);
-  delay(delay);
+  delay(del);
 }
 
 /**
  * Fonction permettant d'effectuer une rotation sur la droite pendant un temps donné
  * @param delay Le delai de rotation (en ms)
  */
-void leftRotation(int delay){
+void rightRotation(int del){
   leftMotor(100, true);
   rightMotor(100, false);
-  delay(delay);
+  delay(del);
 }
