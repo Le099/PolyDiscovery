@@ -93,6 +93,11 @@ void loop()
     }
   }
   while(digitalRead(sw) == LOW){
+    int joy_x = analogRead(VRx);
+    int joy_y = analogRead(VRy);
+    if(!((joy_x >= 460 && joy_x <= 540) && (joy_y >= 460 && joy_y <= 540))){ // stop
+      stopDelay(2000);
+    }
     int frontDistance = distanceSensor.measureDistanceCm();
     Serial.print("Distance front: ");
     Serial.println(frontDistance);
@@ -103,9 +108,9 @@ void loop()
     }else if(frontDistance < 100 && frontDistance >= 50){
       speed = 50;
     }else{
-      stopDelay(20);
+      stopDelay(100);
       rightRotation(1000);
-      stopDelay(20);
+      stopDelay(100);
     }
     Serial.println(frontDistance);
     if((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW) || (digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW)){
