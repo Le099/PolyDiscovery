@@ -9,14 +9,14 @@ The main goal is to create a driving prototype capable of avoiding obstacles or 
 ### Features
 
 ###### TBA (mandatory):
-* Robot moving program
-* Obstacle avoidance program
+  
 
 ###### TBA (optionnal):
 * Cartography of a defined space
 
 ###### Working:
-* *None yet*
+* Obstacle avoidance program
+* Autonomous / manual mode
 
 ---
 ### Authors
