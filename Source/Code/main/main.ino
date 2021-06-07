@@ -118,17 +118,19 @@ void loop()
       leftMotor(100,false);
       rightMotor(100,false);
       delay(1000);
+      rightRotation(500);
+      delay(250);
     }
     else if((digitalRead(IR_F_L) == LOW) && (digitalRead(IR_F) == HIGH)){
       Serial.println("Small right");
       stopDelay(100);
-      rightRotation(100);
+      rightRotation(250);
       stopDelay(100);
     }
     else if((digitalRead(IR_F_R) == LOW) && (digitalRead(IR_F) == HIGH)){
       Serial.print("Small left");
       stopDelay(100);
-      leftRotation(100);
+      leftRotation(250);
       stopDelay(100);
     }
     else{
