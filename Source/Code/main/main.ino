@@ -72,24 +72,12 @@ void loop()
     }
     else if(joy_x > 520 && (joy_y >= 460 && joy_y <= 540)){ // forward
       int vitesse = map(joy_x,520,1023,0,255);
-      if(!((digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW) || (digitalRead(IR_F_R) == LOW))){ // if no obstacle is in sight in front
-        leftMotor(vitesse,true);
-        rightMotor(vitesse,true);
-      }
-      else{ // if obstacle is in sight
-        leftMotor(0,true);
-        rightMotor(0,true);
-      }
+      leftMotor(vitesse,true);
+      rightMotor(vitesse,true);
     }
     else if(joy_x < 480 && (joy_y >= 460 && joy_y <= 540)){ // backward
-      if(!((digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW))){ // if no obstacle is in sight in the back
-        leftMotor(100,false);
-        rightMotor(100,false);
-      }
-      else{ // if obstacle is in sight
-        leftMotor(0,true);
-        rightMotor(0,true);
-      }
+      leftMotor(100,false);
+      rightMotor(100,false);
     }
   }
   while(digitalRead(sw) == LOW){
@@ -132,6 +120,10 @@ void loop()
       stopDelay(100);
       leftRotation(250);
       stopDelay(100);
+    }
+    else if(((digitalRead(IR_F_R) == LOW) || (digitalRead(IR_F) == LOW) || (digitalRead(IR_F_L) == LOW)) && ((digitalRead(IR_B_L) == LOW) || (digitalRead(IR_B_R) == LOW))) { // obstacle in front and in back
+      leftMotor(0,true);
+      rightMotor(0,true);
     }
     else{
       leftMotor(speed,true);
